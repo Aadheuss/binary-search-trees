@@ -30,29 +30,87 @@ const buildTree = (arr) => {
 const tree = (arr) => {
   let root = buildTree(arr);
 
-  const insert = function (val, node = root) {
-    // Once leave node is reached insert the node
+  const insert = (val, node = root) => {
+    if (root === null) {
+      // Insert the first node, if node is null
+      root = Node(val);
+    }
 
     if (node === null) {
-      root = Node(val);
-    } else {
-      if (val === node.data) {
-        return;
-      }
+      return Node(val);
+    }
 
-      if (val < node.data) {
-        if (node.left === null) {
-          node.left = Node(val);
-        } else {
-          insert(val, node.left);
-        }
+    if (val === node.data) {
+      return node;
+    }
+
+    if (val < node.data) {
+      node.left = insert(val, node.left);
+    } else {
+      node.right = insert(val, node.right);
+    }
+
+    return node;
+  };
+
+  const remove = (val, node = root) => {
+    // Base case
+    if (node === null) {
+      return node;
+    }
+
+    if (val === node.data) {
+      // We reach here when the root is the node to be deleted
+
+      // If one of the children is empty
+      if (node.left === null) {
+        const temp = node.right;
+        delete node;
+        return temp;
+      } else if (node.right === null) {
+        const temp = node.left;
+        delete node;
+        return temp;
       } else {
-        if (node.right === null) {
-          node.right = Node(val);
-        } else {
-          insert(val, node.right);
+        // If both children exist
+        let successorParent = node;
+
+        // Find successor
+        let successor = node.right;
+        while (successor.left !== null) {
+          successorParent = successor;
+          successor = successor.left;
         }
+
+        // Delete successor. SInce successor
+        // is always left child of its parent
+        // we can safely make successor's right
+        // right child as left of its parent.
+        // if there is no succ, then assign
+        // succ.right to succParent.right
+        if (successorParent !== node) {
+          successorParent.left = successor.right;
+        } else {
+          successorParent.right = successor.right;
+        }
+
+        // Copy Successor Data to root
+        node.data = successor.data;
+        console.log(node.data);
+
+        // Delete Successor and return root
+        delete data;
+        return node;
       }
+    }
+
+    // Recursive calls for ancestors of node to be deleted
+    if (val < node.data) {
+      node.left = remove(val, node.left);
+      return node;
+    } else {
+      node.right = remove(val, node.right);
+      return node;
     }
   };
 
@@ -61,11 +119,13 @@ const tree = (arr) => {
       return root;
     },
     insert,
+    remove,
   };
   // Root attribute uses the return value of buildTree
 };
 
 const nodeTest = tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6, 6345, 324]);
+const nodeTest1 = tree();
 
 // Print the tree in structured format
 // This function will expect to receive the root of your tree as the value for the Node parameter
@@ -82,11 +142,6 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
-nodeTest.insert(2);
-nodeTest.insert(7);
-nodeTest.insert(3);
-nodeTest.insert(33);
-nodeTest.insert(69);
 prettyPrint(nodeTest.root);
 
 // Write insert and delete functions that accepts a value to insert/delete
