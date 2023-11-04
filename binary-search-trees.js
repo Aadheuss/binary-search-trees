@@ -126,6 +126,32 @@ const tree = (arr) => {
     }
   };
 
+  const q = [];
+
+  const levelOrder = (callback, node = root) => {
+    if (node === null) {
+      return;
+    }
+
+    q.push(node);
+
+    // while there is at least one discovered node
+    while (q.length !== 0) {
+      const current = q[0];
+      callback(current);
+
+      if (current.left !== null) {
+        q.push(current.left);
+      }
+      if (current.right !== null) {
+        q.push(current.right);
+      }
+
+      // Removing the element at front
+      q.shift();
+    }
+  };
+
   return {
     get root() {
       return root;
@@ -133,6 +159,7 @@ const tree = (arr) => {
     insert,
     remove,
     find,
+    levelOrder,
   };
   // Root attribute uses the return value of buildTree
 };
@@ -157,5 +184,5 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 
 prettyPrint(nodeTest.root);
 console.log(nodeTest.find(23));
-
+nodeTest.levelOrder((a) => console.log(a.data));
 // Write insert and delete functions that accepts a value to insert/delete
