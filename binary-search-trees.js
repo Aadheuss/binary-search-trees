@@ -114,12 +114,25 @@ const tree = (arr) => {
     }
   };
 
+  const find = (val, node = root) => {
+    if (val === node.data || node === null) {
+      return node;
+    }
+
+    if (val < node.data) {
+      return find(val, node.left);
+    } else {
+      return find(val, node.right);
+    }
+  };
+
   return {
     get root() {
       return root;
     },
     insert,
     remove,
+    find,
   };
   // Root attribute uses the return value of buildTree
 };
@@ -143,5 +156,6 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 prettyPrint(nodeTest.root);
+console.log(nodeTest.find(23));
 
 // Write insert and delete functions that accepts a value to insert/delete
