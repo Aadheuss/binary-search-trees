@@ -27,7 +27,7 @@ const buildTree = (arr) => {
   return recurseTree(filteredAndSorted);
 };
 
-const tree = (arr) => {
+const Tree = (arr) => {
   let root = buildTree(arr);
 
   const insert = (val, node = root) => {
@@ -233,12 +233,12 @@ const tree = (arr) => {
   const isBalanced = (node = root) => {
     const leftHeight = height(node.left);
     const rightHeight = height(node.right);
-    const disparancy =
+    const difference =
       leftHeight >= rightHeight
-        ? leftHeight % rightHeight
-        : rightHeight % leftHeight;
+        ? leftHeight - rightHeight
+        : rightHeight - leftHeight;
 
-    return disparancy <= 1 ? true : false;
+    return difference <= 1 ? true : false;
   };
 
   const rebalance = (node = root) => {
@@ -248,8 +248,6 @@ const tree = (arr) => {
       inorder((node) => arr.push(node.data));
       root = buildTree(arr);
     }
-
-    console.log(arr);
   };
   return {
     get root() {
@@ -271,8 +269,8 @@ const tree = (arr) => {
   // Root attribute uses the return value of buildTree
 };
 
-const nodeTest = tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6, 6345, 324]);
-const nodeTest1 = tree([1, 2, 3, 4, 5, 7]);
+const nodeTest = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6, 6345, 324]);
+const nodeTest1 = Tree([1, 2, 3, 4, 5, 7]);
 
 // Print the tree in structured format
 // This function will expect to receive the root of your tree as the value for the Node parameter
@@ -289,14 +287,35 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
-nodeTest.insert(500);
-nodeTest.insert(50);
-nodeTest.insert(78);
-nodeTest.insert(246);
-nodeTest.insert(78);
-nodeTest.insert(2478);
-prettyPrint(nodeTest.root);
-nodeTest.rebalance();
-prettyPrint(nodeTest.root);
-console.log(nodeTest.isBalanced(0));
+function randomNumber() {
+  return Math.floor(Math.random() * 100);
+}
+
+function createRandomNumArr(num = 0) {
+  const arr = [];
+
+  for (let i = 0; i < num; i++) {
+    arr.push(randomNumber());
+  }
+
+  return arr;
+}
+
+const arr = createRandomNumArr(10);
+const testTree3 = Tree(arr);
+console.log(testTree3.isBalanced());
+testTree3.insert(109);
+testTree3.insert(1898);
+testTree3.insert(167);
+prettyPrint(testTree3.root);
+testTree3.preorder((a) => console.log(`preorder: ${a.data}`));
+testTree3.postorder((a) => console.log(`postorder: ${a.data}`));
+testTree3.inorder((a) => console.log(`inorder: ${a.data}`));
+console.log(testTree3.isBalanced());
+testTree3.rebalance();
+console.log(testTree3.isBalanced());
+testTree3.preorder((a) => console.log(`preorder: ${a.data}`));
+testTree3.postorder((a) => console.log(`postorder: ${a.data}`));
+testTree3.inorder((a) => console.log(`inorder: ${a.data}`));
+prettyPrint(testTree3.root);
 // Write insert and delete functions that accepts a value to insert/delete
