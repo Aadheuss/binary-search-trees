@@ -152,6 +152,45 @@ const tree = (arr) => {
     }
   };
 
+  const printLevel = (callback, level, node = root) => {
+    if (level === 6) {
+      console.log({ level });
+      console.log(node);
+    }
+
+    if (node === null) {
+      return;
+    }
+
+    if (level === 0) {
+      callback(node);
+    }
+
+    if (level > 0) {
+      printLevel(callback, level - 1, node.left);
+      printLevel(callback, level - 1, node.right);
+    }
+  };
+
+  const getHigh = (node = root) => {
+    if (node === null) {
+      return -1;
+    } else {
+      const num =
+        getHigh(node.right) > getHigh(node.left)
+          ? getHigh(node.right)
+          : getHigh(node.left);
+      return 1 + num;
+    }
+  };
+
+  const levelOrderRec = (callback, node = root) => {
+    console.log(getHigh(node));
+    for (let level = 0; level <= getHigh(node); level++) {
+      printLevel(callback, level);
+    }
+  };
+
   return {
     get root() {
       return root;
@@ -160,6 +199,7 @@ const tree = (arr) => {
     remove,
     find,
     levelOrder,
+    levelOrderRec,
   };
   // Root attribute uses the return value of buildTree
 };
@@ -182,7 +222,8 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
+nodeTest.insert(200);
+nodeTest.insert(269);
 prettyPrint(nodeTest.root);
-console.log(nodeTest.find(23));
-nodeTest.levelOrder((a) => console.log(a.data));
+nodeTest.levelOrderRec((a) => console.log(`it's: ${a.data}`));
 // Write insert and delete functions that accepts a value to insert/delete
