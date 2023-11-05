@@ -241,6 +241,16 @@ const tree = (arr) => {
     return disparancy <= 1 ? true : false;
   };
 
+  const rebalance = (node = root) => {
+    const arr = [];
+
+    if (!isBalanced(node)) {
+      inorder((node) => arr.push(node.data));
+      root = buildTree(arr);
+    }
+
+    console.log(arr);
+  };
   return {
     get root() {
       return root;
@@ -256,6 +266,7 @@ const tree = (arr) => {
     height,
     depth,
     isBalanced,
+    rebalance,
   };
   // Root attribute uses the return value of buildTree
 };
@@ -279,7 +290,13 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 nodeTest.insert(500);
+nodeTest.insert(50);
+nodeTest.insert(78);
 nodeTest.insert(246);
+nodeTest.insert(78);
+nodeTest.insert(2478);
 prettyPrint(nodeTest.root);
-console.log(nodeTest.isBalanced());
+nodeTest.rebalance();
+prettyPrint(nodeTest.root);
+console.log(nodeTest.isBalanced(0));
 // Write insert and delete functions that accepts a value to insert/delete
