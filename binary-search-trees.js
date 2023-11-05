@@ -172,23 +172,73 @@ const tree = (arr) => {
     }
   };
 
-  const getHigh = (node = root) => {
+  const height = (node = root) => {
     if (node === null) {
-      return -1;
+      return 0;
     } else {
       const num =
-        getHigh(node.right) > getHigh(node.left)
-          ? getHigh(node.right)
-          : getHigh(node.left);
+        height(node.right) > height(node.left)
+          ? height(node.right)
+          : height(node.left);
       return 1 + num;
+    }
+  };
+
+  const depth = (node = root, level = 0) => {
+    if (node === null) {
+      return 0;
+    } else {
+      depth(node.left, level + 1);
+      depth(node.right, level + 1);
     }
   };
 
   const levelOrderRec = (callback, node = root) => {
     console.log(getHigh(node));
-    for (let level = 0; level <= getHigh(node); level++) {
+    for (let level = 0; level < height(node); level++) {
       printLevel(callback, level);
     }
+  };
+
+  const preorder = (callback, node = root) => {
+    if (node === null) {
+      return;
+    } else {
+      callback(node);
+      preorder(callback, node.left);
+      preorder(callback, node.right);
+    }
+  };
+
+  const inorder = (callback, node = root) => {
+    if (node === null) {
+      return;
+    } else {
+      inorder(callback, node.left);
+      callback(node);
+      inorder(callback, node.right);
+    }
+  };
+
+  const postorder = (callback, node = root) => {
+    if (node === null) {
+      return;
+    } else {
+      postorder(callback, node.left);
+      postorder(callback, node.right);
+      callback(node);
+    }
+  };
+
+  const isBalanced = (node = root) => {
+    const leftHeight = height(node.left);
+    const rightHeight = height(node.right);
+    const disparancy =
+      leftHeight >= rightHeight
+        ? leftHeight % rightHeight
+        : rightHeight % leftHeight;
+
+    return disparancy <= 1 ? true : false;
   };
 
   return {
@@ -200,12 +250,18 @@ const tree = (arr) => {
     find,
     levelOrder,
     levelOrderRec,
+    preorder,
+    inorder,
+    postorder,
+    height,
+    depth,
+    isBalanced,
   };
   // Root attribute uses the return value of buildTree
 };
 
 const nodeTest = tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6, 6345, 324]);
-const nodeTest1 = tree();
+const nodeTest1 = tree([1, 2, 3, 4, 5, 7]);
 
 // Print the tree in structured format
 // This function will expect to receive the root of your tree as the value for the Node parameter
@@ -222,8 +278,8 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
-nodeTest.insert(200);
-nodeTest.insert(269);
+nodeTest.insert(500);
+nodeTest.insert(246);
 prettyPrint(nodeTest.root);
-nodeTest.levelOrderRec((a) => console.log(`it's: ${a.data}`));
+console.log(nodeTest.isBalanced());
 // Write insert and delete functions that accepts a value to insert/delete
